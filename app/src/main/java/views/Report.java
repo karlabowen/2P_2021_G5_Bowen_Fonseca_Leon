@@ -16,13 +16,7 @@ public class Report extends DefaultPage {
     private VBox root;
 
     public Report() {
-        this.title.setText("Reportes");
-        this.filterByLabel = new Label("Filtrar por");
-        this.filterByBox = new ChoiceBox<>();
-        this.reportTable = new TableView<>();
-        this.filterByContainer = new HBox(filterByLabel, filterByBox);
-        this.root = new VBox(title, filterByContainer, reportTable);
-        filterByContainer.setId("filterCont");
+        init();
         addOptions();
         giveActions();
     }
@@ -41,6 +35,17 @@ public class Report extends DefaultPage {
 
     public VBox getRoot() {
         return root;
+    }
+
+    @Override
+    protected void init() {
+        this.title.setText("Reportes");
+        this.filterByLabel = new Label("Filtrar por");
+        this.filterByBox = new ChoiceBox<>();
+        this.reportTable = new TableView<>();
+        this.filterByContainer = new HBox(filterByLabel, filterByBox);
+        this.root = new VBox(title, filterByContainer, reportTable);
+        filterByContainer.setId("filterCont");
     }
 
 }

@@ -15,12 +15,7 @@ public class StartPage extends DefaultPage {
     private Scene secondScene;
 
     public StartPage() {
-        this.title.setText("RUMBAMAZZO");
-        this.secondStage = new Stage();
-        this.newGameButton = new Button("Nuevo Juego");
-        this.settingsButton = new Button("Ajustes");
-        this.reportButton = new Button("Reportes");
-        this.root = new VBox(this.title, this.newGameButton, this.settingsButton, this.reportButton);
+        init();
         giveActions();
     }
 
@@ -57,5 +52,16 @@ public class StartPage extends DefaultPage {
         secondStage.setScene(secondScene);
         secondStage.setTitle("Reportes");
         secondStage.show();
+    }
+
+    @Override
+    protected void init() {
+        this.title.setText("RUMBAMAZZO");
+        this.secondStage = new Stage();
+        this.newGameButton = new Button("Nuevo Juego");
+        this.settingsButton = new Button("Ajustes");
+        this.reportButton = new Button("Reportes");
+        this.root = new VBox(this.title, this.newGameButton, this.settingsButton, this.reportButton);
+
     }
 }
