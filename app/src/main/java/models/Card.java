@@ -3,21 +3,29 @@ package models;
 import java.io.Serializable;
 
 public class Card implements Serializable {
-    private int id;
+    private String id;
     private int number;
     private CardModel type;
+    private String imgPath;
 
-    public Card(int id, int number) {
+    public Card(String id, int number) {
         this.id = id;
         this.number = number;
         this.type = CardModel.POKER;
     }
 
-    public int getId() {
+    public Card(String id, int number, CardModel type, String imgPath) {
+        this.id = id;
+        this.number = number;
+        this.type = type;
+        this.imgPath = imgPath;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -37,12 +45,19 @@ public class Card implements Serializable {
         this.type = type;
     }
 
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + number;
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
@@ -57,14 +72,12 @@ public class Card implements Serializable {
         Card other = (Card) obj;
         if (number != other.number)
             return false;
-        if (type != other.type)
-            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Card [id=" + id + "]";
+        return "Card [id=" + id + ", imgPath=" + imgPath + ", number=" + number + ", type=" + type + "]";
     }
 
 }
