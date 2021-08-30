@@ -1,7 +1,5 @@
 package models;
 
-import java.io.Serializable;
-
-public enum Role implements Serializable {
+public enum Role {
     PLAYER, OPPONENT
 }

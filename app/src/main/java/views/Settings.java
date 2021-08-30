@@ -1,11 +1,9 @@
 package views;
 
 import controllers.FileController;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.CardModel;
@@ -22,7 +20,7 @@ public class Settings extends DefaultPage {
     private Button saveButton;
     private VBox root;
 
-    // private Setting savedSetting;
+    private Setting savedSetting;
 
     public Settings() {
         init();
@@ -45,19 +43,25 @@ public class Settings extends DefaultPage {
         showOptionsBox.getItems().add("Si");
         showOptionsBox.getItems().add("No");
 
-        // typeCardBox.setValue(savedSetting.getCardModel());
-        // showOptionsBox.setValue(savedSetting.getSuggestions());
+        if (savedSetting != null) {
+
+            typeCardBox.setValue(savedSetting.getCardModel());
+            showOptionsBox.setValue(savedSetting.getSuggestions());
+        } else {
+            System.out.println("No setting deserialize");
+        }
+
     }
 
     private void saveSettings() {
         showInfoAlert("Ajuste guardado", "Cambios guardados", "Se han guardado los ajustes");
-        // FileController.serializeSettings(new Setting(typeCardBox.getValue(),
-        // showOptionsBox.getValue()),"gameSettings.ser");
+        FileController.serializeSettings(new Setting(typeCardBox.getValue(), showOptionsBox.getValue()),
+                "gameSettings.ser");
     }
 
     @Override
     protected void init() {
-        // this.savedSetting = FileController.deserializeSetting("gameSettings.ser");
+        this.savedSetting = FileController.deserializeSetting("gameSettings.ser");
         this.title.setText("Ajustes");
         this.typeCardLabel = new Label("Nuevo Juego");
         this.typeCardBox = new ChoiceBox<>();

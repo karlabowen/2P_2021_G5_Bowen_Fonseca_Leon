@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -10,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import models.Card;
+import models.Match;
 import views.NewMatch;
 
 public class OpponentThread implements Runnable {
@@ -26,7 +28,7 @@ public class OpponentThread implements Runnable {
 
     }
 
-    public void stealCards() {
+    public synchronized void stealCards() {
         if (!NewMatch.playerTurn) {
 
             for (int idxOp = 0; idxOp < NewMatch.opponentsCardsList.size();) {
@@ -70,6 +72,7 @@ public class OpponentThread implements Runnable {
             }
             checkAvailableCards();
             NewMatch.playerTurn = true;
+
         }
     }
 
@@ -84,8 +87,15 @@ public class OpponentThread implements Runnable {
             updateOpponentPane();
         }
 
+        if (NewMatch.setting.getSuggestions().equals("Si") && !NewMatch.playerCardsList.isEmpty()) {
+            Thread suggestions = new Thread(new SuggestThread());
+            suggestions.start();
+        }
+
         if (NewMatch.playerCardsList.isEmpty() && NewMatch.remainCardsList.isEmpty()
                 && NewMatch.opponentsCardsList.isEmpty()) {
+
+            NewMatch.stopMatch = true;
 
             if (NewMatch.pointsPlayer > NewMatch.pointsOpponent)
                 showInfoAlert("Fin juego", "Felicidades!", "Usted gano");
@@ -94,8 +104,11 @@ public class OpponentThread implements Runnable {
             if (NewMatch.pointsPlayer == NewMatch.pointsOpponent)
                 showInfoAlert("Fin juego", "Empate!", "Casi casi");
 
+            Match matchInfo = new Match(NewMatch.playerName, new Date(), NewMatch.pointsPlayer, NewMatch.pointsOpponent,
+                    NewMatch.pointsPlayer - NewMatch.pointsOpponent, NewMatch.time, NewMatch.steals);
+            NewMatch.matches.add(matchInfo);
+            FileController.serializeMatches(NewMatch.matches, "matches.ser");
         }
-
     }
 
     private void updateOpponentPane() {

@@ -6,8 +6,8 @@ import java.util.Date;
 public class Match implements Serializable {
     private String name;
     private Date date;
-    private int pointsPlayer;
-    private int pointsOponent;
+    private Integer pointsPlayer;
+    private int pointsOpponent;
     private int pointsDiff;
     private int seconds;
     private int stolenPiles;
@@ -15,6 +15,17 @@ public class Match implements Serializable {
     public Match(String name, Date date) {
         this.name = name;
         this.date = date;
+    }
+
+    public Match(String name, Date date, int pointsPlayer, int pointsOpponent, int pointsDiff, int seconds,
+            int stolenPiles) {
+        this.name = name;
+        this.date = date;
+        this.pointsPlayer = pointsPlayer;
+        this.pointsOpponent = pointsOpponent;
+        this.pointsDiff = pointsDiff;
+        this.seconds = seconds;
+        this.stolenPiles = stolenPiles;
     }
 
     public Match() {
@@ -37,7 +48,7 @@ public class Match implements Serializable {
         this.date = date;
     }
 
-    public int getPointsPlayer() {
+    public Integer getPointsPlayer() {
         return pointsPlayer;
     }
 
@@ -46,11 +57,11 @@ public class Match implements Serializable {
     }
 
     public int getPointsOponent() {
-        return pointsOponent;
+        return pointsOpponent;
     }
 
     public void setPointsOponent(int pointsOponent) {
-        this.pointsOponent = pointsOponent;
+        this.pointsOpponent = pointsOponent;
     }
 
     public int getPointsDiff() {
@@ -84,7 +95,7 @@ public class Match implements Serializable {
         result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + pointsDiff;
-        result = prime * result + pointsOponent;
+        result = prime * result + pointsOpponent;
         result = prime * result + pointsPlayer;
         result = prime * result + seconds;
         result = prime * result + stolenPiles;
@@ -112,7 +123,7 @@ public class Match implements Serializable {
             return false;
         if (pointsDiff != other.pointsDiff)
             return false;
-        if (pointsOponent != other.pointsOponent)
+        if (pointsOpponent != other.pointsOpponent)
             return false;
         if (pointsPlayer != other.pointsPlayer)
             return false;
@@ -126,7 +137,7 @@ public class Match implements Serializable {
     @Override
     public String toString() {
         return "Match [date=" + date + ", name=" + name + ", pointsDiff=" + pointsDiff + ", pointsOponent="
-                + pointsOponent + ", pointsPlayer=" + pointsPlayer + ", seconds=" + seconds + ", stolenPiles="
+                + pointsOpponent + ", pointsPlayer=" + pointsPlayer + ", seconds=" + seconds + ", stolenPiles="
                 + stolenPiles + "]";
     }
 

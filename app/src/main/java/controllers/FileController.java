@@ -1,24 +1,20 @@
 package controllers;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 import models.Card;
 import models.CardModel;
@@ -26,48 +22,66 @@ import models.Match;
 import models.Setting;
 
 public class FileController {
+
+    static String filesFolder = "./src/main/resources/files/";
+
     public static void serializeSettings(Setting setting, String fileName) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+
+        File file = new File(filesFolder.concat(fileName));
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(setting);
         } catch (FileNotFoundException fne) {
-            fne.getStackTrace();
+            fne.printStackTrace();
         } catch (IOException ioe) {
-            ioe.getStackTrace();
+            ioe.printStackTrace();
         }
     }
 
     public static Setting deserializeSetting(String fileName) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filesFolder.concat(fileName)))) {
             return (Setting) ois.readObject();
         } catch (FileNotFoundException fne) {
-            fne.getStackTrace();
+            fne.printStackTrace();
         } catch (IOException ioe) {
-            ioe.getStackTrace();
+            ioe.printStackTrace();
         } catch (ClassNotFoundException cnfe) {
-            cnfe.getStackTrace();
+            cnfe.printStackTrace();
         }
         return null;
     }
 
-    public static void serializeMatches(TreeSet<Match> matches, String fileName) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+    public static void serializeMatches(List<Match> matches, String fileName) {
+        File file = new File(filesFolder.concat(fileName));
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(matches);
         } catch (FileNotFoundException fne) {
-            fne.getStackTrace();
+            fne.printStackTrace();
         } catch (IOException ioe) {
-            ioe.getStackTrace();
+            ioe.printStackTrace();
         }
     }
 
-    public static TreeSet<Match> deserializeMatches(String fileName) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            return (TreeSet<Match>) ois.readObject();
-        } catch (FileNotFoundException fne) {
-            fne.getStackTrace();
-        } catch (IOException ioe) {
-            ioe.getStackTrace();
+    public static List<Match> deserializeMatches(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filesFolder.concat(fileName)))) {
+            return (List<Match>) ois.readObject();
         } catch (ClassNotFoundException cnfe) {
-            cnfe.getStackTrace();
+            cnfe.printStackTrace();
+        } catch (FileNotFoundException fne) {
+            fne.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
         return null;
     }
@@ -89,12 +103,7 @@ public class FileController {
         // File representing the folder that you select using a FileChooser
 
         final File dir = path.toFile();
-
-        // array of supported extensions (use a List if you prefer)
-        final String[] EXTENSIONS = new String[] { "jpg", "png", "bmp" // and other formats you need
-        };
-
-        // filter to identify images based on their extensions
+        final String[] EXTENSIONS = new String[] { "jpg", "png", "bmp" };
         final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
 
             @Override
@@ -110,7 +119,7 @@ public class FileController {
         };
 
         int num = 1;
-        if (dir.isDirectory()) { // make sure it's a directory
+        if (dir.isDirectory()) {
             File[] images = dir.listFiles(IMAGE_FILTER);
             // Arrays.sort(images);
             for (final File f : images) {
@@ -119,22 +128,24 @@ public class FileController {
                 try {
                     img = ImageIO.read(f);
 
-                    // you probably want something more involved here
-                    // to display in your UI
-                    // System.out.println(" image: " + f.getName());
-                    // System.out.println(" width : " + img.getWidth());
-                    // System.out.println(" height: " + img.getHeight());
-                    // System.out.println(" size : " + f.length());
-
-                    Card c = new Card(f.getName(), num, cardModel, folder + f.getName());
-                    System.out.println(c.toString());
-                    allCards.add(c);
-
-                    if (num < 13) {
-                        num++;
+                    Card c;
+                    if (cardModel.equals(CardModel.POKER)) {
+                        c = new Card(f.getName(), num, cardModel, folder + f.getName());
+                        if (num < 13) {
+                            num++;
+                        } else {
+                            num = 1;
+                        }
                     } else {
-                        num = 1;
+                        if (!f.getName().equals("back1.png")) {
+                            c = new Card(f.getName(), Integer.valueOf(f.getName().charAt(0)), cardModel,
+                                    folder + f.getName());
+                        } else {
+                            c = new Card(f.getName(), 0, cardModel, folder + f.getName());
+                        }
+
                     }
+                    allCards.add(c);
 
                 } catch (final IOException e) {
                     System.err.println("load of images failed");

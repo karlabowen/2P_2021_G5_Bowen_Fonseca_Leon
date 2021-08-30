@@ -80,7 +80,7 @@ case "`uname`" in
     ;;
 esac
 
-CLASSPATH=$APP_HOME/lib/proyecto_grupo_4.jar:$APP_HOME/lib/javafx-fxml-16-win.jar:$APP_HOME/lib/javafx-fxml-16-linux.jar:$APP_HOME/lib/javafx-fxml-16-mac.jar:$APP_HOME/lib/javafx-controls-16-win.jar:$APP_HOME/lib/javafx-controls-16-linux.jar:$APP_HOME/lib/javafx-controls-16-mac.jar:$APP_HOME/lib/javafx-controls-16.jar:$APP_HOME/lib/javafx-graphics-16-win.jar:$APP_HOME/lib/javafx-graphics-16.jar:$APP_HOME/lib/javafx-base-16-win.jar:$APP_HOME/lib/javafx-base-16-linux.jar:$APP_HOME/lib/javafx-base-16-mac.jar:$APP_HOME/lib/javafx-base-16.jar
+CLASSPATH=$APP_HOME/lib/proyecto_grupo_5_Bowen_Fonseca_Leon.jar:$APP_HOME/lib/javafx-fxml-16-win.jar:$APP_HOME/lib/javafx-fxml-16-linux.jar:$APP_HOME/lib/javafx-fxml-16-mac.jar:$APP_HOME/lib/javafx-controls-16-win.jar:$APP_HOME/lib/javafx-controls-16-linux.jar:$APP_HOME/lib/javafx-controls-16-mac.jar:$APP_HOME/lib/javafx-controls-16.jar:$APP_HOME/lib/javafx-graphics-16-win.jar:$APP_HOME/lib/javafx-graphics-16.jar:$APP_HOME/lib/javafx-base-16-win.jar:$APP_HOME/lib/javafx-base-16-linux.jar:$APP_HOME/lib/javafx-base-16-mac.jar:$APP_HOME/lib/javafx-base-16.jar
 
 
 # Determine the Java command to use to start the JVM.

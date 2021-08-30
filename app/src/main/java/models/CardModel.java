@@ -1,7 +1,5 @@
 package models;
 
-import java.io.Serializable;
-
-public enum CardModel implements Serializable {
+public enum CardModel {
     POKER, SPANISH
 }

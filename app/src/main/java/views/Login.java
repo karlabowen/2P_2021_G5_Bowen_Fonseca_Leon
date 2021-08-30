@@ -1,11 +1,13 @@
 package views;
 
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Login extends DefaultPage {
 
@@ -37,6 +39,14 @@ public class Login extends DefaultPage {
             secondScene.getStylesheets().add("/style/NewMatch.css");
             primaryStage.setScene(secondScene);
             primaryStage.setTitle("Nueva partida");
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+                @Override
+                public void handle(WindowEvent t) {
+                    NewMatch.stopMatch = true;
+                }
+
+            });
             primaryStage.show();
         } else {
             showInfoAlert("Usuario vacio", "Campo vacio", "No se puede crear un jugador sin nombre");

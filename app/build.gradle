@@ -29,7 +29,7 @@ dependencies {
 }
 
 jar {
-    baseName = 'proyecto_grupo_4'
+    baseName = 'proyecto_grupo_5_Bowen_Fonseca_Leon'
     duplicatesStrategy = 'include'
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }  
     manifest {
@@ -43,7 +43,7 @@ sourceSets {
     main {
         resources {
             srcDirs = ["src/main/resources"]
-            includes = ["**/*.css", "**/*.ser", "**/*.jpg"]
+            includes = ["**/*.css", "**/*.ser", "**/*.jpg", "**/*.png"]
         }
     }
 }

@@ -1,17 +1,15 @@
 package views;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
-import java.util.TreeSet;
 
 import controllers.FileController;
 import controllers.OpponentThread;
+import controllers.SuggestThread;
+import controllers.TimeThread;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -22,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.Card;
-import models.CardModel;
 import models.Match;
 import models.Pile;
 import models.Role;
@@ -30,18 +27,10 @@ import models.Setting;
 
 public class NewMatch extends DefaultPage {
 
-    private String playerName;
-    private Match matchInfo;
-    private String name;
-    private Setting setting;
-
-    public static int pointsPlayer;
-    private int steals;
-    public static Pile playerPile = new Pile(new Stack<>(), Role.PLAYER);
-    public static List<Card> playerCardsList;
-
-    public static boolean stopMatchP = false;
-    public static boolean stopMatchO = false;
+    public static String playerName = "";
+    public static boolean stopMatch = false;
+    public static int pointsPlayer = 0;
+    public static int steals = 0;
     public static int pointsOpponent = 0;
     public static int time = 0;
     public static int remainCards = 0;
@@ -49,11 +38,13 @@ public class NewMatch extends DefaultPage {
     public static final int CARDHEIGHT = 100;
     public static boolean playerTurn = true;
     public static Pile opponentPile = new Pile(new Stack<>(), Role.OPPONENT);
-
+    public static Pile playerPile = new Pile(new Stack<>(), Role.PLAYER);
     public static List<Card> opponentsCardsList = new ArrayList<>();
     public static List<Card> tableCardsList = new ArrayList<>();
-
+    public static List<Card> playerCardsList = new ArrayList<>();
     public static Stack<Card> remainCardsList = new Stack<>();
+    public static List<Match> matches = FileController.deserializeMatches("matches.ser");
+    public static Setting setting = FileController.deserializeSetting("gameSettings.ser");
 
     private Label welcomeLabel;
     private Label fixedTextL;
@@ -66,13 +57,6 @@ public class NewMatch extends DefaultPage {
     private Label dinamicStealsL;
     private Label opWelcLabel;
     private Label fixedTextR;
-    public static Label dinamicPointsR = new Label("0");
-    private Label timeLabel;
-    public static Label remainCardsLabel = new Label();
-    public static ImageView playerPileImg = new ImageView();
-    public static ImageView opponentPileImg = new ImageView();
-    public static Image backCardImg = new Image("/images/poker/back1.png", CARDWIDTH, CARDHEIGHT, false, false);
-    public static Image nothingImg = new Image("/images/nothing.png", CARDWIDTH, CARDHEIGHT, false, false);
     private HBox pointsLBox;
     private HBox pointsRBox;
     private HBox stealedLBox;
@@ -84,20 +68,27 @@ public class NewMatch extends DefaultPage {
     private VBox left;
     private VBox right;
     private VBox center;
+    private BorderPane root;
+    public static Label dinamicPointsR = new Label("0");
+    public static Label timeLabel = new Label("0");
+    public static Label remainCardsLabel = new Label();
+    public static ImageView playerPileImg = new ImageView();
+    public static ImageView opponentPileImg = new ImageView();
     public static FlowPane opponentPane = new FlowPane(Orientation.HORIZONTAL);
     public static FlowPane tablePane = new FlowPane(Orientation.HORIZONTAL);
-    private FlowPane playerPane;
-    private BorderPane root;
+    public static FlowPane playerPane = new FlowPane(Orientation.HORIZONTAL);
+    public static Image backCardImg = new Image("/images/poker/back1.png", CARDWIDTH, CARDHEIGHT, false, false);
+    public static Image nothingImg = new Image("/images/nothing.png", CARDWIDTH, CARDHEIGHT, false, false);
+    public static Image suggestImg = new Image("/images/suggest.png", CARDWIDTH, CARDHEIGHT, false, false);
 
-    public NewMatch(String playerName) {
-        this.playerName = playerName;
+    public NewMatch(String name) {
+        playerName = name;
         init();
         giveActions();
     }
 
     @Override
     protected void giveActions() {
-        // System.out.println("Working Directory = " + System.getProperty("user.dir"));
         shuffleOnce();
         loadCardBoard();
     }
@@ -106,16 +97,11 @@ public class NewMatch extends DefaultPage {
         return root;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     @Override
     protected void init() {
+
+        System.out.println(setting);
+
         this.welcomeLabel = new Label("Bienvenid@ " + playerName);
         this.fixedTextL = new Label("Tu informacion");
         this.fixedPointsR = new Label("Puntos ");
@@ -127,7 +113,7 @@ public class NewMatch extends DefaultPage {
         this.dinamicStealsL = new Label("0");
         this.opWelcLabel = new Label("Computador");
         this.fixedTextR = new Label("Oponente");
-        this.timeLabel = new Label();
+
         this.pointsLBox = new HBox(fixedPointsL, dinamicPointsL);
         this.pointsRBox = new HBox(fixedPointsR, dinamicPointsR);
         this.stealedLBox = new HBox(fixedStealsL, dinamicStealsL);
@@ -138,7 +124,6 @@ public class NewMatch extends DefaultPage {
         this.lowerRBox = new VBox(opponentPileImg);
         this.left = new VBox(upperLBox, lowerLBox);
         this.right = new VBox(upperRBox, lowerRBox);
-        this.playerPane = new FlowPane(Orientation.HORIZONTAL);
         this.center = new VBox(opponentPane, tablePane, playerPane);
         this.root = new BorderPane();
         root.setTop(top);
@@ -148,18 +133,20 @@ public class NewMatch extends DefaultPage {
 
         pointsPlayer = 0;
         steals = 0;
+
         playerCardsList = new ArrayList<>();
 
         playerPane.setId("playerPane");
         opponentPane.setId("opponentPane");
         tablePane.setId("tablePane");
 
-        // this.setting = FileController.deserializeSetting("setting.ser");
+        new Thread(new TimeThread()).start();
+
     }
 
     private void shuffleOnce() {
         System.out.println("Inside shuffle");
-        List<Card> allCards = FileController.getAllCards(CardModel.POKER);
+        List<Card> allCards = FileController.getAllCards(setting.getCardModel());
         List<Integer> pickedNumbers = new ArrayList<>();
         Random rand = new Random();
         int r;
@@ -220,6 +207,10 @@ public class NewMatch extends DefaultPage {
         playerPileImg.setImage(nothingImg);
         opponentPileImg.setImage(nothingImg);
         remainCardsLabel.setText(String.valueOf(remainCardsList.size()));
+        if (setting.getSuggestions().equals("Si")) {
+            Thread suggestions = new Thread(new SuggestThread());
+            suggestions.start();
+        }
     }
 
     private void stealCards(Card clickedCard) {

@@ -55,4 +55,9 @@ public class Setting implements Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Setting [cardModel=" + cardModel + ", suggestions=" + suggestions + "]";
+    }
+
 }

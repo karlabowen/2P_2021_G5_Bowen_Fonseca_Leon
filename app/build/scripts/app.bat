@@ -67,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\proyecto_grupo_4.jar;%APP_HOME%\lib\javafx-fxml-16-win.jar;%APP_HOME%\lib\javafx-fxml-16-linux.jar;%APP_HOME%\lib\javafx-fxml-16-mac.jar;%APP_HOME%\lib\javafx-controls-16-win.jar;%APP_HOME%\lib\javafx-controls-16-linux.jar;%APP_HOME%\lib\javafx-controls-16-mac.jar;%APP_HOME%\lib\javafx-controls-16.jar;%APP_HOME%\lib\javafx-graphics-16-win.jar;%APP_HOME%\lib\javafx-graphics-16.jar;%APP_HOME%\lib\javafx-base-16-win.jar;%APP_HOME%\lib\javafx-base-16-linux.jar;%APP_HOME%\lib\javafx-base-16-mac.jar;%APP_HOME%\lib\javafx-base-16.jar
+set CLASSPATH=%APP_HOME%\lib\proyecto_grupo_5_Bowen_Fonseca_Leon.jar;%APP_HOME%\lib\javafx-fxml-16-win.jar;%APP_HOME%\lib\javafx-fxml-16-linux.jar;%APP_HOME%\lib\javafx-fxml-16-mac.jar;%APP_HOME%\lib\javafx-controls-16-win.jar;%APP_HOME%\lib\javafx-controls-16-linux.jar;%APP_HOME%\lib\javafx-controls-16-mac.jar;%APP_HOME%\lib\javafx-controls-16.jar;%APP_HOME%\lib\javafx-graphics-16-win.jar;%APP_HOME%\lib\javafx-graphics-16.jar;%APP_HOME%\lib\javafx-base-16-win.jar;%APP_HOME%\lib\javafx-base-16-linux.jar;%APP_HOME%\lib\javafx-base-16-mac.jar;%APP_HOME%\lib\javafx-base-16.jar
 
 
 @rem Execute app
